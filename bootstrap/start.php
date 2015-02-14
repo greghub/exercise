@@ -24,11 +24,19 @@ $app = new Illuminate\Foundation\Application;
 |
 */
 
-$env = $app->detectEnvironment(array(
+$env = $app->detectEnvironment(function(){
 
-	'local' => array('homestead'),
+	if( isset($_SERVER['APP_ENV']) ){
 
-));
+		return $_SERVER['APP_ENV'];
+
+	}else{
+
+		return 'local';
+
+	}
+
+});
 
 /*
 |--------------------------------------------------------------------------
