@@ -15,3 +15,10 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
+
+
+Route::get('seed', function()
+{
+	Iseed::generateSeed('users');	
+	Iseed::generateSeed('citys');	
+});
