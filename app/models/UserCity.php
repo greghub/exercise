@@ -12,10 +12,12 @@ class UserCity extends Eloquent {
 	public function getCityForAPI() 
 	{
 
+		$city = City::find($this->city_id);
+
 		$response = [
-			"id" => $this->id,
-			"city" => $this->name,
-			"state" => $this->state
+			"id" => $this->city_id,
+			"city" => $city->name,
+			"state" => $city->state
 		];
 
 		return $response;
