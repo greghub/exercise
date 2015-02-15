@@ -23,6 +23,8 @@ Route::group(array('prefix' => 'v1', 'before' => ''), function()
 	# Cities
 	Route::get('states/cities.json', 'CitysController@show');
 
+	# User
+	Route::get('users/visits.json', 'UsersController@visits');
 });
 
 Route::get('seed', function()
