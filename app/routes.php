@@ -16,6 +16,14 @@ Route::get('/', function()
 	return View::make('hello');
 });
 
+Route::group(array('prefix' => 'v1', 'before' => ''), function()
+{
+	Route::enableFilters();
+
+	# Cities
+	Route::get('states/cities.json', 'CitysController@show');
+
+});
 
 Route::get('seed', function()
 {
