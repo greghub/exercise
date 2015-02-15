@@ -85,8 +85,8 @@ class CitysController extends BaseController {
 			        		
 		    	      		$response['cities'][] = $cityItem;
 		    	      	}      	
-				        $response['message'] = "All OK";
 			        }
+			        $response['message'] = "All OK";
 
 	        	} 
 
@@ -95,7 +95,7 @@ class CitysController extends BaseController {
 		        // if no city name and radius are given, search by state
 		        $cities = City::where('state', $state)->where('status', 'verified')->get();
 
-							// -- if cities matching the request found --
+				// -- if cities matching the request found --
 		    	if($cities) {	  
 		        	foreach ($cities as $key => $city) 
 		        	{
