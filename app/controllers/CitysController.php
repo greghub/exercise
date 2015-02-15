@@ -47,9 +47,9 @@ class CitysController extends BaseController {
 			}
 
 			// get the input values
-	 		$state  = Input::get('state');
-	 		$city 	= Input::get('city');
-	 		$radius = Input::get('radius');
+	 		$state  	= Input::get('state');
+	 		$pivot_city = Input::get('city');
+	 		$radius 	= Input::get('radius');
 
 	 		// used in auth.basic filter. grants access only to the authorized users
 			if( !Auth::user() )
@@ -58,24 +58,55 @@ class CitysController extends BaseController {
 				//throw new Exception($e);
 			}
 	         
-	        if ( !empty($city) && !empty($radius))
+	        if ( !empty($pivot_city) && !empty($radius))
 	        {
 
-	        	
+	        	$city = City::where('name', $pivot_city)->first();
+
+	        	if ($city) {
+			        $latitude    = $city['lat'];
+			        $longitude   = $city['lng'];
+
+					$citiesInRadius = DB::select(
+						DB::raw('SELECT *,
+						SQRT(POW(69.1 * (lat - ?), 2) + POW(69.1 * (? - lng) * COS(lat / 57.3), 2)) AS distance
+						FROM `citys` WHERE `status` = "verified" HAVING distance < ? ORDER BY `distance` asc'),
+						array($latitude, $longitude, $radius)
+					);
+
+			    	if($citiesInRadius) {	  
+			        	foreach ($citiesInRadius as $key => $city) 
+			        	{
+			        		// -- get city object in expected format --
+			        		$cityItem['id'] = $city->id;
+			        		$cityItem['name'] = $city->name;
+			        		$cityItem['state'] = $city->state;
+			        		$cityItem['distance'] = $city->distance;
+			        		
+		    	      		$response['cities'][] = $cityItem;
+		    	      	}      	
+				        $response['message'] = "All OK";
+			        }
+
+	        	} 
 
 	        } else {
-
-		        // -- get city object in expected format --
+		        
+		        // if no city name and radius are given, search by state
 		        $cities = City::where('state', $state)->where('status', 'verified')->get();
-		        if($cities) {	  
+
+							// -- if cities matching the request found --
+		    	if($cities) {	  
 		        	foreach ($cities as $key => $city) 
 		        	{
+		        		// -- get city object in expected format --
 	    	      		$response['cities'][] = $city->getCityForAPI();
 	    	      	}      	
 			        $response['message'] = "All OK";
 		        }
-
 		    }
+
+
 	 
 	    } catch (Exception $e) {
 	        $statusCode = 404;
