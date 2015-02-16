@@ -25,6 +25,7 @@ Route::group(array('prefix' => 'v1', 'before' => ''), function()
 
 	# User
 	Route::get('users/visits.json', 'UsersController@visits');
+	Route::post('users/visits.json', 'UsersController@update');
 });
 
 Route::get('seed', function()

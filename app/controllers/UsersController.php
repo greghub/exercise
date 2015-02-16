@@ -81,4 +81,90 @@ class UsersController extends BaseController {
 	 
 	}
 
+
+	/**
+	 * Update the user visits.
+	 * PUT /users/{uuid}
+	 *
+	 * @param  int $user_id, city
+	 * @return Response
+	 */
+	public function update()
+	{
+
+		$validator = Validator::make(			
+		    array(
+		    	'user_id' => Input::get('user_id'),
+		    	'city'    => Input::get('city'),
+		    ),
+		    array(	
+		    	'user_id' => 'required|integer', 
+		    	'city'	  => 'required|string'
+		    )
+		);
+		$response = [
+	        'city' => []
+        ];	        
+        $statusCode = 200;
+
+		try {
+
+			if ($validator->fails())
+			{
+				$e = $validator->messages();
+				throw new Exception($e);
+			}
+	 	
+	 		$user_id = Input::get('user_id');
+	 		$city_input = Input::get('city');
+
+	 		$city = City::where('name', $city_input)->first();
+
+	 		if( $city ) {
+
+				$check_visit = UserCity::where('city_id', $city["id"])->where('user_id', $user_id)->first();
+
+				// checking if the user has already visited the city
+				// if not, add it
+				if(!$check_visit) 
+				{			 	
+				 	$visit = new UserCity;
+				 	$visit->user_id = $user_id;
+				 	$visit->city_id = $city["id"];
+				 	$visit->save();
+
+
+			        $response = [
+			        	'result' => 'Visit successfully updated',
+				        'city' => $visit->getCityForAPI()
+			        ];
+			    } else 			        
+			    	$response = [
+			        	'result' => 'The user has already visited the city',
+				        'city' => $check_visit->getCityForAPI()
+			        ];{
+
+			    }
+		        $statusCode = 200;
+
+		    } else {
+
+		        $response = [
+		        	'result' => 'City not found',
+			        'city' => []
+		        ];
+		        $statusCode = 404;
+
+		    }
+	 
+	    } catch (Exception $e) {
+	    	$response = [
+	    		'error' => $e->getMessage()
+	    	];	    	
+        	$statusCode = 404;
+	    } finally {
+	    	return Response::json($response, $statusCode, array(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+	    }
+
+	}
 }
