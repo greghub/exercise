@@ -3,8 +3,13 @@
 1) clone the repo<br>
 2) run ```composer install```<br>
 3) run the migrations ```php artisan migrate```<br>
-4) the repo comes with the database, so you don't have to add the deafault values. 
+4) the repo comes with the database, so you don't have to add the deafault values.<br>
+5) to run the tests (Codeception) build the tests ```./vendor/bin/codecept build``` then run ```./vendor/bin/codecept run```
 run ```php artisan db:seed```<br>
+<br>
+Run ```http://exercise.dev/seed``` if you want to seed your version of database.<br>
+Some code for working with user authorization is written. so it can be quickly converted into an API that user authorization e.g. auth.basic<br>
+It checks if the user has already visited the city, then adds it.
 <br><br>
 *Features*<br>
 <br>
