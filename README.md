@@ -5,7 +5,7 @@
 3) run the migrations ```php artisan migrate```<br>
 4) the repo comes with the database, so you don't have to add the deafault values. 
 run ```php artisan db:seed```<br>
-
+<br><br>
 *Features*<br>
 <br>
 1) List all cities in a state<br>
