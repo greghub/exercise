@@ -32,4 +32,5 @@ Route::get('seed', function()
 {
 	Iseed::generateSeed('users');	
 	Iseed::generateSeed('citys');	
+	Iseed::generateSeed('user_citys');	
 });
